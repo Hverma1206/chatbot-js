@@ -5,6 +5,13 @@
 
 A simple yet responsive chatbot built with **Node.js**, **Socket.IO**, and **Bootstrap**. This chatbot provides a clean and professional user interface and allows real-time communication between a user and the bot.
 
+Collaboration 🤝
+This project was created in collaboration with:
+
+Himanshu Verma 👨‍💻
+Ankit 🧑‍💼
+Together, we built an intuitive and interactive chatbot interface!
+
 ## Features
 
 - Real-time messaging using Socket.IO
