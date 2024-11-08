@@ -9,7 +9,9 @@ This project was created in collaboration with:
 
 - 👨‍💻 [Himanshu Verma](https://www.linkedin.com/in/himanshu-verma12/)
 - 🧑‍💼 [Ankit](https://www.linkedin.com/in/himanshu-verma12/)
+
 Together, we built an intuitive and interactive chatbot interface!
+
 ## Features
 
 - Real-time messaging using Socket.IO
