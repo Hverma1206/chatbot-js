@@ -7,10 +7,9 @@ A simple yet responsive chatbot built with **Node.js**, **Socket.IO**, and **Boo
 Collaboration 🤝
 This project was created in collaboration with:
 
-Himanshu Verma 👨‍💻
-Ankit 🧑‍💼
+- 👨‍💻 [Himanshu Verma](https://www.linkedin.com/in/himanshu-verma12/)
+- 🧑‍💼 [Ankit](https://www.linkedin.com/in/himanshu-verma12/)
 Together, we built an intuitive and interactive chatbot interface!
-
 ## Features
 
 - Real-time messaging using Socket.IO
