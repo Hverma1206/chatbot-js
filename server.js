@@ -28,8 +28,10 @@ async function getGeminiResponse(message) {
 
     // Constructing the payload according to the API specifications
     const data = {
-        text: message,  // 'text' might be the correct field
-        settings: {
+        input: {
+            text: message,  // Use "text" as the key for input
+        },
+        parameters: {
             temperature: 0.7,
             maxOutputTokens: 150,
         }
