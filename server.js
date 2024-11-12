@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const fs = require('fs');
-const https = require('https');
+const https = require('https');  // Use the built-in https module for API requests
 
 const app = express();
 const server = http.createServer(app);
@@ -20,21 +20,26 @@ fs.readFile('data.json', 'utf8', (err, data) => {
     }
 });
 
-// Function to call Google Gemini API and get the response
+// Function to get response from Google Gemini API
 function getGeminiResponse(message, callback) {
-    const apiKey = 'AIzaSyCixY7CYJNfUi3r0HCP-Hs14VnCM1KwM3Q';  // Your API key
+    const apiKey = 'AIzaSyCixY7CYJNfUi3r0HCP-Hs14VnCM1KwM3Q';  
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
+    // Adjusted request body format for Gemini API
     const data = JSON.stringify({
-        prompt: message,
-        temperature: 0.7,  // Control the creativity of the response
-        maxOutputTokens: 150,  // Limit the response length
+        input: {
+            text: message,  // Using "text" instead of "prompt"
+        },
+        parameters: {
+            temperature: 0.7,
+            max_tokens: 150,  // Adjusted max tokens parameter
+        }
     });
 
     const options = {
         hostname: 'generativelanguage.googleapis.com',
         port: 443,
-        path: '/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' + apiKey,
+        path: `/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -44,16 +49,28 @@ function getGeminiResponse(message, callback) {
 
     const req = https.request(options, (res) => {
         let responseData = '';
-
+        
         res.on('data', (chunk) => {
             responseData += chunk;
         });
-
+        
         res.on('end', () => {
+            // Log the full response for debugging
+            console.log('Full response from Gemini API:', responseData);
+            console.log('Response status code:', res.statusCode);
+            console.log('Response headers:', res.headers);
+
             try {
                 const parsedData = JSON.parse(responseData);
-                console.log('Response from Gemini API:', parsedData); // Log the entire response to check the structure
 
+                // Handle potential errors from the Gemini API
+                if (parsedData.error) {
+                    console.error('API Error:', parsedData.error);
+                    callback(`Error from Gemini API: ${parsedData.error.message}`, null);
+                    return;
+                }
+
+                // Check if the API returns generated content
                 if (parsedData.generatedContent) {
                     callback(null, parsedData.generatedContent.trim());
                 } else {
@@ -75,20 +92,20 @@ function getGeminiResponse(message, callback) {
     req.end();
 }
 
-// Function to get a response from either the local dataset or Google Gemini
+// Function to get a bot response (from local data or Gemini API)
 function getBotResponse(message, callback) {
     const lowerCaseMessage = message.toLowerCase();
     const foundEntry = chatbotData.find(entry => lowerCaseMessage.includes(entry.question.toLowerCase()));
-
-    // If the message is found in the local dataset, return the local response
+    
     if (foundEntry) {
         callback(null, foundEntry.response);
     } else {
-        // Otherwise, fall back to Google Gemini API
+        // If no match found, use Gemini API
         getGeminiResponse(message, callback);
     }
 }
 
+// Socket.IO connection handling
 io.on('connection', (socket) => {
     console.log('A user connected');
     
