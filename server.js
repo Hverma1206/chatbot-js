@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const fs = require('fs');
-const axios = require('axios');  // Importing axios for API requests
+const axios = require('axios');  
 
 const app = express();
 const server = http.createServer(app);
@@ -10,7 +10,6 @@ const io = new Server(server);
 
 app.use(express.static('public'));
 
-// Load local chatbot data from JSON
 let chatbotData;
 fs.readFile('data.json', 'utf8', (err, data) => {
     if (err) {
@@ -21,15 +20,13 @@ fs.readFile('data.json', 'utf8', (err, data) => {
     }
 });
 
-// Function to get response from Google Gemini API using axios
 async function getGeminiResponse(message) {
-    const apiKey = 'AIzaSyCixY7CYJNfUi3r0HCP-Hs14VnCM1KwM3Q';  // Replace with your API key
+    const apiKey = 'AIzaSyCixY7CYJNfUi3r0HCP-Hs14VnCM1KwM3Q';  
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
-    // Constructing the payload according to the API specifications
     const data = {
         input: {
-            text: message,  // Use "text" as the key for input
+            text: message,  
         },
         parameters: {
             temperature: 0.7,
@@ -56,28 +53,26 @@ async function getGeminiResponse(message) {
     }
 }
 
-// Function to get a bot response (local data or Gemini API)
 async function getBotResponse(message) {
     const lowerCaseMessage = message.toLowerCase();
     const foundEntry = chatbotData.find(entry => lowerCaseMessage.includes(entry.question.toLowerCase()));
     
     if (foundEntry) {
-        return foundEntry.response;  // Return local match
+        return foundEntry.response;  
     } else {
-        return await getGeminiResponse(message);  // Fallback to Gemini API
+        return await getGeminiResponse(message);  
     }
 }
 
-// Socket.IO connection handling
 io.on('connection', (socket) => {
     console.log('A user connected');
     
     socket.on('user message', async (msg) => {
         try {
             const botResponse = await getBotResponse(msg);
-            socket.emit('bot response', botResponse);  // Send bot response
+            socket.emit('bot response', botResponse);  
         } catch (error) {
-            socket.emit('bot response', error.message);  // Send error message if no response
+            socket.emit('bot response', error.message);  
         }
     });
     
