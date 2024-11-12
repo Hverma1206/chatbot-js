@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@google-cloud/language": "^6.5.0",
+    "axios": "^1.7.7",
     "chatbot": "file:",
     "express": "^4.17.1",
     "socket.io": "^4.0.1"
