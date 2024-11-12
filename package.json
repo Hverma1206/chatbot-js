@@ -7,6 +7,7 @@
     "start": "nodemon server.js"
   },
   "dependencies": {
+    "@google-cloud/language": "^6.5.0",
     "chatbot": "file:",
     "express": "^4.17.1",
     "socket.io": "^4.0.1"
