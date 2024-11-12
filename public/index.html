@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
+        /* Global styling */
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(to right, #f5f7fa, #c3cfe2);
@@ -16,35 +18,49 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
 
         #chat-container {
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
             background-color: #fff;
             border-radius: 15px;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             height: 600px;
             display: flex;
             flex-direction: column;
+            animation: fadeInUp 1s ease forwards;
         }
 
         h2 {
             text-align: center;
             color: #007bff;
-            padding: 20px 0;
-            margin: 0;
+            padding: 20px ;
+            margin: 7px;
             font-weight: 600;
+            background-color: #007bff;
+            color: #fff;
+            border-bottom: 2px solid #f1f3f5;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            animation: slideIn 1.2s ease;
+            border-radius: 60px;
         }
 
         #chat {
+            margin-top: 5px;
             padding: 20px;
             height: 100%;
             overflow-y: auto;
-            background-color: #f1f3f5;
+            background-color: #f9fbfd;
             border-top: 1px solid #ccc;
-            flex-grow: 1; 
+            flex-grow: 1;
+            transition: background-color 0.3s;
+        }
+
+        #chat:hover {
+            background-color: #f1f3f5;
         }
 
         .message {
@@ -54,6 +70,8 @@
             border-radius: 20px;
             font-size: 16px;
             line-height: 1.5;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
         }
 
         .message.user {
@@ -61,33 +79,39 @@
             color: #fff;
             margin-left: auto;
             border-top-right-radius: 0;
+            animation-delay: 0.2s;
         }
 
         .message.bot {
             background-color: #e0e0e0;
             color: #333;
             border-top-left-radius: 0;
-        }
-
-        .message .emoji {
-            font-size: 20px;
-            margin-right: 8px;
+            animation-delay: 0.4s;
         }
 
         .input-group {
             padding: 15px;
             background-color: #fff;
             border-top: 1px solid #ccc;
+            display: flex;
             position: relative;
+            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
         }
 
         #input {
             border-radius: 30px;
-            padding-left: 15px;
+            padding-left: 20px;
             font-size: 16px;
             border: 1px solid #ccc;
-            width: 80%;
+            width: 85%;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        #input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
         }
 
         #send-btn {
@@ -99,11 +123,16 @@
             height: 50px;
             margin-left: 10px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
 
         #send-btn:hover {
             background-color: #0056b3;
+            transform: scale(1.1);
         }
 
         @media (max-width: 600px) {
@@ -113,23 +142,61 @@
             }
 
             #input {
-                width: 70%;
+                width: 75%;
+            }
+        }
+
+        /* Keyframes for animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
             }
         }
     </style>
 </head>
+
 <body>
 
-<div id="chat-container" class="container">
-    <h2>💬Sasta ChatBot</h2>
-    <div id="chat" class="mb-3"></div>
-    <div class="input-group">
-        <input id="input" type="text" class="form-control" placeholder="Type a message..." aria-label="User message">
-        <button id="send-btn" class="btn" type="button"><i class="fas fa-paper-plane"></i></button>
+    <div id="chat-container" class="container">
+        <h2>Sasta ChatBot💬</h2>
+        <div id="chat" class="mb-3"></div>
+        <div class="input-group">
+            <input id="input" type="text" class="form-control" placeholder="Type a message..."
+                aria-label="User message">
+            <button id="send-btn" class="btn" type="button"><i class="fas fa-paper-plane"></i></button>
+        </div>
     </div>
-</div>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="script.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
