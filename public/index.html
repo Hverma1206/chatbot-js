@@ -19,6 +19,7 @@
             min-height: 100vh;
             margin: 0;
             overflow: hidden;
+            perspective: 1200px;
         }
 
         #chat-container {
@@ -26,18 +27,25 @@
             max-width: 500px;
             background-color: #fff;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             height: 600px;
             display: flex;
             flex-direction: column;
-            animation: fadeInUp 1s ease forwards;
+            animation: fadeInUp 1s ease forwards, rotateIn 1s ease forwards;
+            transform-style: preserve-3d;
+            transition: transform 0.5s, box-shadown 0.3s ease-in-out;
+        }
+
+        #chat-container:hover {
+            transform: translateZ(30px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
         }
 
         h2 {
             text-align: center;
             color: #007bff;
-            padding: 20px ;
+            padding: 20px;
             margin: 7px;
             font-weight: 600;
             background-color: #007bff;
@@ -71,7 +79,8 @@
             font-size: 16px;
             line-height: 1.5;
             opacity: 0;
-            animation: fadeIn 0.5s ease forwards;
+            animation: fadeIn 0.5s ease forwards, flipIn 0.8s ease forwards;
+            transform-style: preserve-3d;
         }
 
         .message.user {
@@ -106,6 +115,8 @@
             width: 85%;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+            transform: translateZ(0);
         }
 
         #input:focus {
@@ -123,16 +134,18 @@
             height: 50px;
             margin-left: 10px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transform-style: preserve-3d;
         }
 
         #send-btn:hover {
             background-color: #0056b3;
-            transform: scale(1.1);
+            transform: scale(1.1) translateZ(5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.349);
         }
 
         @media (max-width: 600px) {
@@ -146,7 +159,6 @@
             }
         }
 
-        /* Keyframes for animations */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -180,6 +192,44 @@
                 opacity: 1;
             }
         }
+
+        @keyframes rotateIn {
+            from {
+                transform: rotateY(-90deg);
+                opacity: 0;
+            }
+
+            to {
+                transform: rotateY(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes flipIn {
+            from {
+                transform: rotateY(-90deg);
+                opacity: 0;
+            }
+
+            to {
+                transform: rotateY(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 rgba(0, 123, 255, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(0, 123, 255, 0.7);
+            }
+            100% {
+                box-shadow: 0 0 0 rgba(0, 123, 255, 0.5);
+            }
+        }
+
+      
     </style>
 </head>
 
